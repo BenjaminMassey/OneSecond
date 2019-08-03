@@ -18,20 +18,20 @@ public class TextEditor : MonoBehaviour
         
     }
 
-    public static void Write(string text)
+    public static void Write(string loc, string text)
     {
-        if (me == null)
+        me = GameObject.Find(loc);
+        if (me != null)
         {
-            me = GameObject.Find("Text");
+            me.GetComponent<UnityEngine.UI.Text>().text = text;
         }
-        me.GetComponent<UnityEngine.UI.Text>().text = text;
     }
-    public static void Append(string text)
+    public static void Append(string loc, string text)
     {
-        if (me == null)
+        me = GameObject.Find(loc);
+        if (me != null)
         {
-            me = GameObject.Find("Text");
+            me.GetComponent<UnityEngine.UI.Text>().text += text;
         }
-        me.GetComponent<UnityEngine.UI.Text>().text += text;
     }
 }

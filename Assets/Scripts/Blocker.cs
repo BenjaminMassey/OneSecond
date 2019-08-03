@@ -51,15 +51,15 @@ public class Blocker : MonoBehaviour
     IEnumerator OnSignal()
     {
         Movement.block = true;
-        TextEditor.Write("");
+        TextEditor.Write("Heading", "");
         int count = 20;
         for (int i = 0; i < count; i++)
         {
-            TextEditor.Append("=");
+            TextEditor.Append("Heading", "=");
             yield return new WaitForSeconds(1.0f / count);
         }
         On();
-        TextEditor.Write("");
+        TextEditor.Write("Heading", "");
         Movement.block = false;
     }
 }
