@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    public float speed = 0.02f;
+    public float speed; // 0.02 normal, 0.2 for laggy itch.io
     public static bool block;
 
     // Start is called before the first frame update
@@ -13,8 +13,7 @@ public class Movement : MonoBehaviour
         block = true;
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (Input.GetKey(KeyCode.W) && !block)
         {

@@ -117,7 +117,7 @@ public class Generator : MonoBehaviour
             {
                 map[y][x] = 0;
                 float rand = Random.Range(0.0f, 1.0f);
-                if (rand < 0.1f)
+                if (rand < 0.2f)
                 {
                     map[y][x] = 1;
                 }
@@ -135,12 +135,118 @@ public class Generator : MonoBehaviour
                 }
             }
         }
+        List<int> missing = new List<int>();
+        for (int i = 2; i < numGoals + 2; i++)
+        {
+            bool included = false;
+            for(int y = 0; y < map.Length; y++)
+            {
+                for (int x = 0; x < map[0].Length; x++)
+                {
+                    if (map[y][x] == i)
+                    {
+                        included = true;
+                        break;
+                    }
+                }
+                if (included)
+                {
+                    break;
+                }
+            }
+            if (!included)
+            {
+                missing.Add(i);
+            }
+        }
+        if (missing.Count > 0)
+        {
+            foreach (int i in missing)
+            {
+                Vector2 goalSpot = Vector2.zero;
+                do
+                {
+                    goalSpot.x = Random.Range(0, map[0].Length);
+                    goalSpot.y = Random.Range(0, map.Length);
+                }
+                while (goalSpot.x > 4 && goalSpot.x < 9 && goalSpot.y < 1 && !goalSpots.Contains(goalSpot));
+                map[(int)goalSpot.y][(int)goalSpot.x] = i;
+            }
+
+        }
+        ClearPath(new Vector2(6, 0), goalSpots[0]);
+        for (int i = 0; i < goalSpots.Count - 1; i++)
+        {
+            ClearPath(goalSpots[i], goalSpots[i + 1]);
+        }
         /* CURRENTLY BROKEN
         if (!PathExists(new Vector2(11, 1), goalSpot))
         {
             RandomMap();
         }
         */
+    }
+
+    public static void ClearPath(Vector2 start, Vector2 end)
+    {
+        int timeout = 0;
+        Debug.Log("Start: " + start);
+        Debug.Log("End: " + end);
+        Vector2 current = start;
+        while (current != end)
+        {
+            Debug.Log("Current: " + current);
+            if (map[(int)current.y][(int)current.x] < 2)
+            {
+                map[(int)current.y][(int)current.x] = 0;
+            }
+            Vector2 diff = end - current;
+            Debug.Log("Diff: " + diff);
+            int[] changes = new int[2];
+            for (int i = 0; i < 2; i++)
+            {
+                if (diff.x > 0.0f)
+                {
+                    changes[i] = 1;
+                }
+                else if (diff.x < 0.0f)
+                {
+                    changes[i] = -1;
+                }
+                else
+                {
+                    changes[i] = Random.Range(0, 2) == 1 ? -1 : 1;
+                }
+                if (Random.Range(0, 2) == 1 ? true : false)
+                {
+                    changes[i] = 0;
+                }
+            }
+            current.x += changes[0];
+            current.y += changes[1];
+            if (current.x < 0)
+            {
+                current.x = 0;
+            }
+            if (current.x > map[0].Length - 1)
+            {
+                current.x = map[0].Length - 1;
+            }
+            if (current.y < 0)
+            {
+                current.y = 0;
+            }
+            if (current.y > map.Length - 1)
+            {
+                current.y = map.Length - 1;
+            }
+            timeout++;
+            if (timeout == 100)
+            {
+                Debug.Log("Couldn't clear path :(");
+                break;
+            }
+        }
     }
 
     /* BROKEN
