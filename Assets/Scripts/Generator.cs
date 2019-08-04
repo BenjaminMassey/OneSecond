@@ -15,10 +15,10 @@ public class Generator : MonoBehaviour
     {
         //img.Apply();
         objs = new List<GameObject>();
-        map = new int[10][];
+        map = new int[5][];
         for (int i = 0; i < map.Length; i++)
         {
-            map[i] = new int[23];
+            map[i] = new int[12];
         }
         ssprite = sprite;
         //MakeMaze();
@@ -29,11 +29,12 @@ public class Generator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // DEBUG
+        /* DEBUG
         if (Input.GetKeyDown(KeyCode.Y))
         {
             CreateObject(RandomX(), RandomY());
         }
+        */
     }
     /* OLD
     public static void MakeMaze()
@@ -56,8 +57,8 @@ public class Generator : MonoBehaviour
         {
             foreach (int spot in line)
             {
-                float xPos = (-2.2f) + (x * 0.2f);
-                float yPos = (-0.9f) + (y * 0.2f);
+                float xPos = (-2.305f) + (x * 0.4f);
+                float yPos = (-0.82f) + (y * 0.4f);
                 //Debug.Log("(" + x + "," + y + ") goes to (" + xPos + "," + yPos + ")");
                 if (spot == 1)
                 {
@@ -94,6 +95,10 @@ public class Generator : MonoBehaviour
     public static void RandomMap()
     {
         int numGoals = TouchHandler.streak + 1;
+        if (numGoals > 60)
+        {
+            numGoals = 60;
+        }
         List<Vector2> goalSpots = new List<Vector2>(numGoals);
         for (int i = 0; i < numGoals; i++)
         {
@@ -103,7 +108,7 @@ public class Generator : MonoBehaviour
                 goalSpot.x = Random.Range(0, map[0].Length);
                 goalSpot.y = Random.Range(0, map.Length);
             }
-            while (goalSpot.x > 9 && goalSpot.x < 13 && goalSpot.y < 2 && !goalSpots.Contains(goalSpot));
+            while (goalSpot.x > 4 && goalSpot.x < 9 && goalSpot.y < 1 && !goalSpots.Contains(goalSpot));
             goalSpots.Add(goalSpot);
         }
         for (int y = 0; y < map.Length; y++)
@@ -116,7 +121,7 @@ public class Generator : MonoBehaviour
                 {
                     map[y][x] = 1;
                 }
-                if (x > 9 && x < 13 && y < 2)
+                if (x > 4 && x < 9 && y < 1)
                 {
                     //Debug.Log("Didn't do " + x + ", " + y);
                     map[y][x] = 0;
@@ -263,6 +268,7 @@ public class Generator : MonoBehaviour
         obj.AddComponent<SpriteRenderer>();
         obj.GetComponent<SpriteRenderer>().sprite = ssprite;
         obj.transform.position = new Vector2(x, y);
+        obj.transform.localScale = new Vector2(2.0f, 2.0f);
         obj.AddComponent<BoxCollider2D>();
         obj.AddComponent<Rigidbody2D>();
         obj.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
